@@ -1,35 +1,48 @@
-const starCafeList = require("./models/starCafeList");
+const ListaStarCafe = require("../models/starCafeList");
 
-const starCafeList = (req, res) => {
-    res.json(listaCafes.listarCafes());
+// Função para inicializar com dois cafés
+const inicializarCafes = () => {
+    ListaStarCafe.adicionarCafe("Café Expresso", 5.00, "Expresso tradicional");
+    ListaStarCafe.adicionarCafe("Café Latte", 6.50, "Café com leite vaporizado");
+};
+
+const listarCafes = (req, res) => {
+    const cafes = ListaStarCafe.listarCafes();
+    res.json(cafes);
 };
 
 const adicionarCafe = (req, res) => {
     const { nome, valor, produto } = req.body;
-    if (!nome || !valor || !produto) {
-        return res.status(400).json({erro: "Todos os campos são obrigatórios!"});
-    }
-
-const novoCafe = listaCafes.adicionarCafe(nome, valor, produto);
-res.status(201).json(novoCafe);
+    const novoCafe = ListaStarCafe.adicionarCafe(nome, valor, produto);
+    res.status(201).json(novoCafe);
 };
 
-const buscarCafe = (req, res) => {
-    const cafe =
-listaCafes.buscarCafePorId(parseInt(req.params.id));
-    if (!cafe) {
-        return res.status(404).json({erro: "Café não encontrado!"});
+const buscarCafePorId = (req, res) => {
+    const { id } = req.params;
+    const cafe = ListaStarCafe.buscarCafePorId(parseInt(id, 10));
+    if (cafe) {
+        res.json(cafe);
+    } else {
+        res.status(404).send('Café não encontrado');
     }
-    res.json(cafe);
-}
+};
 
 const removerCafe = (req, res) => {
-    const cafeRemovido =
-listaCafes.removerCafe(parseInt(req.params.id));
-    if (!cafeRemovido) {
-        return res.status(404).json({erro: "Café não encontrado!"});
+    const { id } = req.params;
+    const cafeRemovido = ListaStarCafe.removerCafe(parseInt(id, 10));
+    if (cafeRemovido) {
+        res.json(cafeRemovido);
+    } else {
+        res.status(404).send('Café não encontrado');
     }
-    res.json({message: "Café removido com sucesso!", cafeRemovido});
 };
 
-module.exports = { listaCafes, adicionarCafe, buscarCafe, removerCafe};
+// Inicializar os cafés ao carregar o módulo
+inicializarCafes();
+
+module.exports = {
+    listarCafes,
+    adicionarCafe,
+    buscarCafePorId,
+    removerCafe
+};

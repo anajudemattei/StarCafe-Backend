@@ -1,12 +1,13 @@
-const StarCafe = require("..models/starCafe");
+const StarCafe = require("../models/starCafe");
 
 class ListaStarCafe {
     constructor() {
         this.cafes = [];
+        this.proximoId = 1; 
     }
 
     adicionarCafe(nome, valor, produto) {
-        const novoCafe = new Cafe(this.proximoId++, nome, valor, produto);
+        const novoCafe = new StarCafe(this.proximoId++, nome, valor, produto);
         this.cafes.push(novoCafe);
         return novoCafe;
     }
@@ -20,7 +21,7 @@ class ListaStarCafe {
     }
 
     removerCafe(id) {
-        const index = this.cafes.findIndex(livro => livro.id === id);
+        const index = this.cafes.findIndex(cafe => cafe.id === id);
         if (index !== -1) {
             return this.cafes.splice(index, 1)[0];
         }
@@ -28,4 +29,4 @@ class ListaStarCafe {
     }
 }
 
-module.exports = new starCafeList();
+module.exports = new ListaStarCafe();
